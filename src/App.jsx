@@ -4,6 +4,8 @@ import { ethers } from 'ethers';
 import {contractABI, contractAddress} from './Constant/constant';
 
 import Login from './components/Login';
+import Connected from './components/Connected';
+
 
 
 function App() {
@@ -11,28 +13,28 @@ function App() {
   const [ account, setAccount ] = useState(null);
   const [ isConnected, setIsConnected ] = useState(false);
 
-  // useEffect(() => {
-  //   if(window.ethereum) {
-  //     window.ethereum.on('accountsChanged', handleAccountsChanged);
-  //   }
+  useEffect(() => {
+    if(window.ethereum) {
+      window.ethereum.on('accountsChanged', handleAccountsChanged);
+    }
 
-  //   return() => {
-  //     if(window.ethereum){
-  //       window.ethereum.removeListener('accountsChanged', handleAccountsChanged)
-  //     }
-  //   }
-  // });
+    return() => {
+      if(window.ethereum){
+        window.ethereum.removeListener('accountsChanged', handleAccountsChanged)
+      }
+    }
+  });
 
   // HANDLE METAMASK ACCOUNT CHANGE
-  // const handleAccountsChanged = (accounts) => {
-  //   if (accounts.length > 0 && account !== accounts[0]) {
-  //     setAccount(accounts[0]);
-  //     canVote();
-  //   } else {
-  //     setIsConnected(false);
-  //     setAccount(null);
-  //   }
-  // }
+  const handleAccountsChanged = (accounts) => {
+    if (accounts.length > 0 && account !== accounts[0]) {
+      setAccount(accounts[0]);
+      canVote();
+    } else {
+      setIsConnected(false);
+      setAccount(null);
+    }
+  }
 
 
   // CONNECT TO METAMASK
@@ -57,7 +59,7 @@ function App() {
 
   return (
     <>
-      <Login connectWallet = {connectToMetaMask} />
+      { isConnected ? (<Connected account = {account} />) : (<Login connectWallet = {connectToMetaMask} />) }
     </>
   )
 }
