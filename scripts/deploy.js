@@ -8,8 +8,8 @@ import hre from "hardhat";
 
 async function main() {
   const votingContract = await hre.ethers.getContractFactory("Voting");
-  const deployedVotingContract = await votingContract.deploy(["Mark", "Mike", "Henry", "Rock"], 90)
-
+  // const deployedVotingContract = await votingContract.deploy();
+  const deployedVotingContract = await votingContract.deploy(["Mark", "Mike", "Henry", "Rock"], 30);
   console.log(`Contract Address deployed: ${deployedVotingContract.target}`);
 }
 
