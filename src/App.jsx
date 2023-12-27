@@ -38,7 +38,7 @@ function App() {
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
     const contractInstance = new ethers.Contract (
-      contractAddress, contractAbi, signer
+      contractAddress, contractABI, signer
     );
 
     const tx = await contractInstance.vote(number);
@@ -52,7 +52,7 @@ function App() {
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
     const contractInstance = new ethers.Contract (
-      contractAddress, contractAbi, signer
+      contractAddress, contractABI, signer
     );
     const voteStatus = await contractInstance.voters(await signer.getAddress());
     setCanVote(voteStatus);
@@ -64,7 +64,7 @@ function App() {
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
     const contractInstance = new ethers.Contract (
-      contractAddress, contractAbi, signer
+      contractAddress, contractABI, signer
     );
     const status = await contractInstance.getVotingStatus();
     console.log(status);
@@ -79,7 +79,7 @@ function App() {
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
     const contractInstance = new ethers.Contract (
-      contractAddress, contractAbi, signer
+      contractAddress, contractABI, signer
     );
     const candidatesList = await contractInstance.getAllVotesOfCandiates();
     const formattedCandidates = candidatesList.map((candidate, index) => {
@@ -98,10 +98,14 @@ function App() {
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
     const contractInstance = new ethers.Contract (
-      contractAddress, contractAbi, signer
+      contractAddress, contractABI, signer
     );
     const time = await contractInstance.getRemainingTime();
     setremainingTime(parseInt(time, 16));
+  }
+
+  const handleNumberChange = async (e) => {
+    setNumber(e.target.value);
   }
 
   // OWNER - METAMASK ACCOUNT
@@ -140,7 +144,21 @@ function App() {
 
   return (
     <>
-      { isConnected ? (<Connected account = {account} />) : (<Login connectWallet = {connectToMetaMask} />) }
+      { votingStatus ? 
+        (isConnected ? 
+          (<Connected 
+            account = {account}
+            candidates = {candidates}
+            remainingTime = {remainingTime}
+            number= {number}
+            handleNumberChange = {handleNumberChange}
+            voteFunction = {vote}
+            showButton = {CanVote}/>
+          ) :          
+          (<Login connectWallet = {connectToMetaMask}/>)
+        ) : 
+        (<Finished />)
+      }
     </>
   )
 }
